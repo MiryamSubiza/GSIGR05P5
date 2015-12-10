@@ -151,10 +151,9 @@ public class Artist implements Performer, XMLRepresentable, Serializable {
         boolean respuesta = false;
         XStream xStream = new XStream(new DomDriver());
         FileWriter fichero = null;
-        PrintWriter pw = null;
         try {
             fichero = new FileWriter(f);
-            pw = new PrintWriter(fichero);
+            PrintWriter pw = new PrintWriter(fichero);
             pw.println(toXML());            
         }
         catch (Exception e) {
