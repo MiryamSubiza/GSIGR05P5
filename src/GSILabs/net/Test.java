@@ -18,9 +18,10 @@ public class Test {
     
     public static void main(String[] args) throws IOException {
 
-        TicketWebServer t = new TicketWebServer();
+        TicketWebServer t = new TicketWebServer(new BussinessSystem());
         
-        t.run(5000, "www.megustamuchogsi.com");
+        t.run(8000, "www.megustamuchogsi.com");
+        t.stop();
         
     }
     
