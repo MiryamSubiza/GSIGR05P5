@@ -12,8 +12,14 @@ import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.ConnectException;
+import java.net.PortUnreachableException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import jdk.nashorn.internal.runtime.Context;
 
 /**
  * 
@@ -23,22 +29,24 @@ import java.net.Socket;
  */
 public class TicketWebServer {
     
-    ServerSocket sc;
-    Socket so;
+    private BussinessSystem bs;
+    private ServerSocket sc; //Socket servidor
+    private Socket so; //Socket cliente
+    private boolean stopped;
+    
+    
     DataOutputStream salida;
     String mensajeRecibido;
     
     
     
-    
-    //BussinessSystem bs = new BussinessSystem();
-    
-    public TicketWebServer () {
+    public TicketWebServer (BussinessSystem bs) {
         
-        //bs = (BussinessSystem)t;
+        this.bs = bs;
+        this.sc = null;
+        this.stopped = false;
         
     }
-    
     
     /**
      * 
@@ -47,17 +55,47 @@ public class TicketWebServer {
      * @return True la primera invocación sobre un puerto. 
      *         False reinvocaciones sobre el mismo puerto, sin surtir efecto.
      */
-    boolean run (int p, String domain) {
+    public boolean run (int p, String domain) {
+    
+        try {
+            //Creación del socket servidor que escuchará en puerto p
+            this.sc = new ServerSocket(p);
+        }
+        catch (PortUnreachableException ex) {
+            System.out.println("Puerto " + p + " inalcanzable. " + ex);
+        }
+        catch (ConnectException ex) {
+            System.out.println("->Error en la escucha sobre el puerto " + p);
+            System.out.println(ex);
+        }
+        catch (IOException ex) {
+            System.out.println("Error en la escucha sobre el puerto " + p);
+            System.out.println(ex);
+        }
+        System.out.println("Esperando una conexión: ");
+        this.so = new Socket();
+        try {
+            //Listens for a connection to be made to this socket and accepts it
+            so = sc.accept();
+            //Conexión por parte del cliente
+            System.out.println("Un cliente se ha conectado");
+        }
+        catch (SocketException ex) {
+            System.out.println("Error accediendo al socket. " + ex);
+        }
+        catch (IOException ex) {
+            System.out.println("Error estableciendo la conexión con el cliente: " + ex);
+            if (stopped) 
+                System.out.println("Se ha detenido el servidor");
+        }
+        
+        /*
         
         BufferedReader entrada;
         
         try {
-            sc = new ServerSocket(p);/* crea socket servidor que escuchara en puerto 5000*/
-            so = new Socket();
-            System.out.println("Esperando una conexión:");
-            so = sc.accept();
-            //Inicia el socket, ahora está esperando una conexión por parte del cliente
-            System.out.println("Un cliente se ha conectado.");
+            
+            
             //Canales de entrada y salida de datos
             entrada = new BufferedReader(new InputStreamReader(so.getInputStream()));
             salida = new DataOutputStream(so.getOutputStream());
@@ -74,16 +112,24 @@ public class TicketWebServer {
             System.out.println("Error: " + e.getMessage());
             return false;
         }
-        
+        */
         return true;
         
     }
     
-    boolean stop () throws IOException {
+    /**
+     * 
+     * @return True si se ha cerrado correctamente la conexión con el cliente.
+     *         False en caso contrario.
+     */
+    public boolean stop () {
         
-        sc.close();//Aqui se cierra la conexión con el cliente
-        
-        return true;
-        
+        try {
+            this.sc.close(); //Closes this socket
+            this.stopped = true;
+        } catch (IOException ex) {
+            System.out.println("Error cerrando el servidor. " + ex);
+        }
+        return stopped;
     }    
 }
