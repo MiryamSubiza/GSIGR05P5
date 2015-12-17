@@ -89,7 +89,7 @@ public class TicketWebServer {
                 System.out.println("Se ha detenido el servidor");
         }
         
-        /*
+        
         
         BufferedReader entrada;
         
@@ -103,16 +103,17 @@ public class TicketWebServer {
             salida.writeUTF("Conexión exitosa...n envia un mensaje :D");
             //Recepcion de mensaje
             mensajeRecibido = entrada.readLine();
-            System.out.println(mensajeRecibido);
-            salida.writeUTF("Se recibio tu mensaje.n Terminando conexion...");
-            salida.writeUTF("Gracias por conectarte, adios!");
+            System.out.println("El cliente manda: " + mensajeRecibido);
+            salida.write(("<html>Hola mundo</html>").getBytes()); 
+            //salida.writeUTF("Se recibio tu mensaje.n Terminando conexion...");
+            //salida.writeUTF("Gracias por conectarte, adios!");                       
             System.out.println("Cerrando conexión...");   
         }
         catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
             return false;
         }
-        */
+        
         return true;
         
     }
