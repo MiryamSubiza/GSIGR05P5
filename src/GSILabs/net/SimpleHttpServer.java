@@ -1,5 +1,6 @@
 package GSILabs.net;
 
+import GSILabs.BSystem.BussinessSystem;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
@@ -9,17 +10,48 @@ import java.util.Map;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class SimpleHttpServer {
 
-  public static void main(String[] args) throws Exception {
-    HttpServer server = HttpServer.create(new InetSocketAddress(8000), 0);
-    server.createContext("/info", new InfoHandler());
-    server.createContext("/get", new GetHandler());
-    server.setExecutor(null); // creates a default executor
-    server.start();
-    System.out.println("The server is running");
-  }
+    private BussinessSystem bs;
+    private boolean stopped = false;
+    private HttpServer server;
+    
+    public SimpleHttpServer (BussinessSystem bs) {
+        this.bs = bs;   
+    }
+    
+    public static void main(String[] args) {
+        
+        
+        
+    }
+    
+    public boolean run (int p, String domain) {
+        try {
+            server = HttpServer.create(new InetSocketAddress(8000), 0);
+        } catch (IOException e) {
+            System.out.println("Error creando el servidor. " + e);
+        }
+        server.createContext("/info", new InfoHandler());
+        server.createContext("/get", new GetHandler());
+        server.setExecutor(null); // creates a default executor
+        server.start();
+        System.out.println("The server is running");
+        return true;
+    }
+    
+    public boolean stop () {
+        server.stop(1);
+        this.stopped = true;
+        return stopped;
+    } 
+    
+    
 
   // http://localhost:8000/info
   static class InfoHandler implements HttpHandler {
