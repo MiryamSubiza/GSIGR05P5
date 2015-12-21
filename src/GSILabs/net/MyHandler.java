@@ -20,8 +20,7 @@ public class MyHandler implements HttpHandler {
     
     public void handle(HttpExchange t) throws IOException {
         
-        //File f = new File("test/index.html");
-        //String response = "<html><body><a href=\"enlace/\" title=\"Descripción\">Enlace a otra pagina</a></body></html>";
+        //File f = new File("test/index.html");      
         String response = "<html><body><a href='/enlace'>Enlace a otra pagina</a></body></html>";
         t.sendResponseHeaders(200, response.length());
         OutputStream os = t.getResponseBody();
