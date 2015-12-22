@@ -102,12 +102,13 @@ public class TicketWebServer {
             System.out.println("Confirmando conexión al cliente....");
             salida.writeUTF("Conexión exitosa...n envia un mensaje :D");
             //Recepcion de mensaje
-            mensajeRecibido = entrada.readLine();
-            System.out.println("El cliente manda: " + mensajeRecibido);
+            //mensajeRecibido = entrada.readLine();
+            //System.out.println("El cliente manda: " + mensajeRecibido);
             salida.write(("<html>Hola mundo</html>").getBytes()); 
             //salida.writeUTF("Se recibio tu mensaje.n Terminando conexion...");
             //salida.writeUTF("Gracias por conectarte, adios!");                       
-            System.out.println("Cerrando conexión...");   
+            System.out.println("Cerrando conexión...");
+            
         }
         catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
