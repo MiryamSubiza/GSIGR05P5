@@ -5,6 +5,10 @@
  */
 package probaproba;
 
+import GSILabs.BModel.Artist;
+import GSILabs.BModel.Concert;
+import GSILabs.BModel.Exhibition;
+import GSILabs.BModel.FechaCompleta;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,6 +17,8 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 
 public class TicketWebServer {
@@ -114,5 +120,46 @@ class ThreadSocket extends Thread {
             }
         }
         return result;
-    }    
+    }
+    
+    public String concertToHTML (Concert c) {
+        String html;
+        html = "<html><head>Concert</head><body>Name: " + c.getName() + "\nPerformer: ";
+        if (c.getPerformer() instanceof Artist)
+            html.concat("<a href='/artist?artistName=" + c.getPerformer().getName() + "'>" 
+                    + c.getPerformer().getName() + "</a>\n");
+        else
+            html.concat("<a href='/collective?collectiveName=" + c.getPerformer().getName() 
+                    + "'>" + c.getPerformer().getName() + "</a>\n");
+        html.concat("Date: " + ((FechaCompleta)c.getStartDate()).fechaToString() + "\nDoor opening: " 
+                + ((FechaCompleta)c.getDoorOpeningTimeConcert()).horaToString() + "h\nStart time: " 
+                + ((FechaCompleta)c.getStartTimeConcert()).horaToString() + "h\nClosing time: " 
+                + ((FechaCompleta)c.getClosingTimeConcert()).horaToString() + "h\nLocation: " 
+                + "<a href='/location?locationName=" + c.getLocation().getName() + "'>" + 
+                c.getLocation().getName() + "</a>\n" + "</body></html>");
+        return html;
+    }
+    
+    public String exhibitionToHTML (Exhibition e) {
+        String html;
+        html = "<html><head>Exhibition</head><body>Name: " + e.getName() + "\nTitle: "
+                + e.getTitle() + "\nOrganizer: " + e.getOrganizerName() + "Start date: " 
+                + ((FechaCompleta)e.getStartDate()).fechaToString() + "\nStart time: " 
+                + ((FechaCompleta)e.getStartTimeExhibition()).horaToString() + "h\nClosing time: " 
+                + ((FechaCompleta)e.getClosingTimeExhibition()).horaToString() + "h\nClosing date: "
+                + ((FechaCompleta)e.getEndingDate()).fechaToString();
+        if (e.getPerformer() instanceof Artist)
+            html.concat("<a href='/artist?artistName=" + e.getPerformer().getName() + "'>" + 
+                    e.getPerformer().getName() + "</a>\nWeb links: ");
+        else
+            html.concat("<a href='/collective?collectiveName=" + e.getPerformer().getName() + "'>" 
+                    + e.getPerformer().getName() + "</a>\nWeb links: ");
+        Iterator i = e.getWebLinks().iterator();
+        while (i.hasNext()) {
+            html.concat(i.next() + "  ");
+        }
+        html.concat("\nLocation: <a href='/location?locationName=" + e.getLocation().getName() + "'>" + 
+                e.getLocation().getName() + "</a>\n</body></html>");
+        return html;
+    }
 }
