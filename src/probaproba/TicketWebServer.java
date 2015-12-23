@@ -49,16 +49,17 @@ class ThreadSocket extends Thread {
             String line;
             line = in.readLine();
             String request_method = line;
+            if (request_method != null) {
+                Map <String,String> parms = queryToMap(request_method);
+                System.out.println("parms es " + parms);
+            }
             
             System.out.println("1.HTTP-HEADER: " + line);
             line = "";
             // looks for post data
-            int postDataI = -1;
+            /*int postDataI = -1;
             while ((line = in.readLine()) != null && (line.length() != 0)) {
-                Map <String,String> parms = queryToMap(request_method);
-                System.out.println("parms es " + parms);
-                
-                //System.out.println("2.HTTP-HEADER: " + line);
+                System.out.println("2.HTTP-HEADER: " + line);
                 if (line.indexOf("Content-Length:") > -1) {
                     postDataI = new Integer(line.substring(line.indexOf("Content-Length:") + 16,line.length())).intValue();
                 }
@@ -69,7 +70,7 @@ class ThreadSocket extends Thread {
                 char[] charArray = new char[postDataI];
                 in.read(charArray, 0, postDataI);
                 postData = new String(charArray);
-            }
+            }*/
             out.println("HTTP/1.0 200 OK");
             out.println("Content-Type: text/html; charset=utf-8");
             out.println("Server: MINISERVER");
@@ -78,9 +79,9 @@ class ThreadSocket extends Thread {
             // Send the HTML page
             out.println("<H1>List of events</H1>");
             out.println("<H2>Request Method->" + request_method + "</H2>");
-            out.println("<H2>Post->" + postData + "</H2>");
-            //out.println("<form name=\"input\" action=\"form_submited\" method=\"post\">");
-            //out.println("Username: <input type=\"text\" name=\"user\"><input type=\"submit\" value=\"Submit\"></form>");
+            /*out.println("<H2>Post->" + postData + "</H2>");*/
+            out.println("<form name=\"input\" action=\"form_submited\" method=\"post\">");
+            out.println("Username: <input type=\"text\" name=\"user\"><input type=\"submit\" value=\"Submit\"></form>");
             out.println("<H3><a href='/concerts'>Concerts</a></H3>");
             out.println("<H3><a href='/exhibitions'>Exhibitions</a></H3>");
             out.println("<H3><a href='/festivals'>Festivals</a></H3>");
