@@ -577,6 +577,7 @@ public class P01Tester {
     }
     
     public static BussinessSystem getBussinessSystem () {
+        introduccionDatos();
         return bussinessSystem;
     }
     
