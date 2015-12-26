@@ -100,6 +100,14 @@ public class Collective implements Performer, XMLRepresentable, Serializable {
     }
     
     /**
+     * Obtener artistas que forman el grupo
+     * @return Artistas
+     */
+    public HashSet getArtists() {
+        return artists;
+    }
+    
+    /**
      * Obtener nombre artístico
      * @return Nombre artístico
      */
