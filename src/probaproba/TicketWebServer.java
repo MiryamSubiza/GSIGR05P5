@@ -101,21 +101,6 @@ class ThreadSocket extends Thread {
             }            
             System.out.println("1.HTTP-HEADER: " + line);
             line = "";
-            
-            /*out.println("HTTP/1.0 200 OK");
-            out.println("Content-Type: text/html; charset=utf-8");
-            out.println("Server: MINISERVER");*/
-            // this blank line signals the end of the headers
-            //out.println("");
-            // Send the HTML page
-            //out.println("<H1>List of events</H1>");
-            //out.println("<H2>Request Method->" + request_method + "</H2>");
-            //out.println("<H2>Post->" + postData + "</H2>");
-            //out.println("<form name=\"input\" action=\"form_submited\" method=\"post\">");
-            //out.println("Username: <input type=\"text\" name=\"user\"><input type=\"submit\" value=\"Submit\"></form>");
-            //out.println("<H3><a href='/concerts'>Concerts</a></H3>");
-            //out.println("<H3><a href='/exhibitions'>Exhibitions</a></H3>");
-            //out.println("<H3><a href='/festivals'>Festivals</a></H3>");
             out.close();
             clientSocket.close();
         } catch (IOException e) {
@@ -132,16 +117,15 @@ class ThreadSocket extends Thread {
         }
         for (String param : query.split("&")) {
             String pair[] = param.split("=");
-            if (pair.length>1) {
+            if (pair.length>1)
                 result.put(pair[0], pair[1]);
-            }
-            else {
+            else
                 result.put(pair[0], "");
-            }
         }
         return result;
     }
     
+    //Sustituir los guiones bajos que habíamos puesto en los enlaces por espacios de nuevo
     public String ponerEspacios (String enlace) {
         return enlace.replaceAll("_", " ");
     }
