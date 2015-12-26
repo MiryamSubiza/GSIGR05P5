@@ -214,6 +214,7 @@ public class ToHTML {
         return html;
     }
     
+    //Sustituir los espacios por guiones bajos para poder crear los enlaces
     public String quitarEspacios (String enlace) {
         return enlace.replaceAll(" ", "_");
     }
