@@ -5,11 +5,7 @@
  */
 package probaproba;
 
-import GSILabs.BModel.Artist;
-import GSILabs.BModel.Concert;
-import GSILabs.BModel.Exhibition;
-import GSILabs.BModel.FechaCompleta;
-import GSILabs.BModel.Festival;
+import GSILabs.BModel.*;
 import GSILabs.BSystem.BussinessSystem;
 import GSILabs.BTesting.P01Tester;
 import java.io.BufferedReader;
@@ -89,26 +85,20 @@ class ThreadSocket extends Thread {
                         out.println(toHTML.listOfExhibitions(bs.getExhibitions()));
                     else if (parms.containsKey("festivals"))
                         out.println(toHTML.listOfFestivals(bs.getFestivals()));
-                }
-                else if ((parms.size() == 2)) {
-                    if (parms.containsKey("concertName")) {
-                        System.out.println("sin espacios es " + parms.get("concertName"));
-                        System.out.println("con espacios es " + ponerEspacios(parms.get("concertName")));
+                    else if (parms.containsKey("concertName"))
                         out.println(toHTML.concertToHTML((Concert)bs.getEvent(ponerEspacios(parms.get("concertName")))));
-                    }
                     else if (parms.containsKey("exhibitionName"))
-                        out.println(toHTML.exhibitionToHTML((Exhibition)bs.getEvent(parms.get("exhibitionName"))));
+                        out.println(toHTML.exhibitionToHTML((Exhibition)bs.getEvent(ponerEspacios(parms.get("exhibitionName")))));
                     else if (parms.containsKey("festivalName"))
-                        out.println(toHTML.festivalToHTML((Festival)bs.getEvent(parms.get("festivalName"))));
+                        out.println(toHTML.festivalToHTML((Festival)bs.getEvent(ponerEspacios(parms.get("festivalName")))));
                     else if (parms.containsKey("locationName"))
-                        out.println();
+                        out.println(toHTML.locationToHTML((Location)bs.getLocation(ponerEspacios(parms.get("locationName")))));
                     else if (parms.containsKey("artistName"))
-                        out.println();
+                        out.println(toHTML.artistToHTML((Artist)bs.getArtists().get(ponerEspacios(parms.get("artistName")))));
                     else if (parms.containsKey("collectiveName"))
-                        out.println();
+                        out.println(toHTML.collectiveToHTML((Collective)bs.getCollectives().get(ponerEspacios(parms.get("collectiveName")))));
                 }
-            }
-            
+            }            
             System.out.println("1.HTTP-HEADER: " + line);
             line = "";
             
@@ -137,7 +127,7 @@ class ThreadSocket extends Thread {
         Map<String, String> result = new HashMap<String, String>();
         String[] queries;
         if (query.contains("?")) {
-            queries = query.split("?");
+            queries = query.split("\\?");
             query = queries[1];
         }
         for (String param : query.split("&")) {
