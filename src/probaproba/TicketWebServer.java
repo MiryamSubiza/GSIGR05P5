@@ -77,7 +77,7 @@ class ThreadSocket extends Thread {
                 Map <String,String> parms = queryToMap(request_method.substring(5, request_method.length() - 9));
                 System.out.println("parms es " + parms);
                 if ((parms.size() == 1)) {
-                    if (parms.containsKey(""))
+                    if (parms.containsKey("") || parms.containsKey("events"))
                         out.println(toHTML.listOfEvents());
                     else if (parms.containsKey("concerts"))
                         out.println(toHTML.listOfConcerts(bs.getConcerts()));
@@ -97,6 +97,8 @@ class ThreadSocket extends Thread {
                         out.println(toHTML.artistToHTML((Artist)bs.getArtists().get(ponerEspacios(parms.get("artistName")))));
                     else if (parms.containsKey("collectiveName"))
                         out.println(toHTML.collectiveToHTML((Collective)bs.getCollectives().get(ponerEspacios(parms.get("collectiveName")))));
+                    else
+                        out.println("<html><body><h4>Website not found</h4></body></html>");
                 }
             }            
             System.out.println("1.HTTP-HEADER: " + line);
