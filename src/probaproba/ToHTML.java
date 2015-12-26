@@ -130,7 +130,7 @@ public class ToHTML {
     }
     
     public String quitarEspacios (String enlace) {
-        return enlace.replaceAll(" ", "");
+        return enlace.replaceAll(" ", "_");
     }
     
     

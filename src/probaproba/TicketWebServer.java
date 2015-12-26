@@ -91,7 +91,21 @@ class ThreadSocket extends Thread {
                         out.println(toHTML.listOfFestivals(bs.getFestivals()));
                 }
                 else if ((parms.size() == 2)) {
-                    
+                    if (parms.containsKey("concertName")) {
+                        System.out.println("sin espacios es " + parms.get("concertName"));
+                        System.out.println("con espacios es " + ponerEspacios(parms.get("concertName")));
+                        out.println(toHTML.concertToHTML((Concert)bs.getEvent(ponerEspacios(parms.get("concertName")))));
+                    }
+                    else if (parms.containsKey("exhibitionName"))
+                        out.println(toHTML.exhibitionToHTML((Exhibition)bs.getEvent(parms.get("exhibitionName"))));
+                    else if (parms.containsKey("festivalName"))
+                        out.println(toHTML.festivalToHTML((Festival)bs.getEvent(parms.get("festivalName"))));
+                    else if (parms.containsKey("locationName"))
+                        out.println();
+                    else if (parms.containsKey("artistName"))
+                        out.println();
+                    else if (parms.containsKey("collectiveName"))
+                        out.println();
                 }
             }
             
@@ -122,8 +136,8 @@ class ThreadSocket extends Thread {
     public static Map<String, String> queryToMap (String query) {
         Map<String, String> result = new HashMap<String, String>();
         String[] queries;
-        if (query.contains("/")) {
-            queries = query.split("/");
+        if (query.contains("?")) {
+            queries = query.split("?");
             query = queries[1];
         }
         for (String param : query.split("&")) {
@@ -136,5 +150,9 @@ class ThreadSocket extends Thread {
             }
         }
         return result;
+    }
+    
+    public String ponerEspacios (String enlace) {
+        return enlace.replaceAll("_", " ");
     }
 }
