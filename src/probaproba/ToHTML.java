@@ -105,7 +105,7 @@ public class ToHTML {
                     + "h<br>Start time: " + ((FechaCompleta)c.getStartTimeConcert()).horaToString() + 
                     "h<br>Closing time: " + ((FechaCompleta)c.getClosingTimeConcert()).horaToString() + 
                     "h<br>Location: " + "<a href='/location?locationName=" + quitarEspacios(c.getLocation().getName())
-                    + "'>" + c.getLocation().getName() + "</a><br><a href='/concerts'>List of concerts</a>"
+                    + "'>" + c.getLocation().getName() + "</a><br><br><br><a href='/concerts'>List of concerts</a>"
                     + "<br></body></html>");
         }
         else
@@ -137,7 +137,7 @@ public class ToHTML {
             }
             html = html.concat("<br>Location: <a href='/location?locationName=" + 
                     quitarEspacios(e.getLocation().getName()) + "'>" + e.getLocation().getName() 
-                    + "</a><br><a href='/exhibitions'>List of exhibitions</a><br></body></html>");
+                    + "</a><br><br><br><a href='/exhibitions'>List of exhibitions</a><br></body></html>");
         }
         else
             html = "<html><meta http-equiv=\'Content-Type\' content=\'text/html; charset=UTF-8\' />"
@@ -163,7 +163,7 @@ public class ToHTML {
                         quitarEspacios(cName) + "'>" + cName + "</a><br>");
                 j++;
             }
-            html = html.concat("<a href='/festivals'>List of festivals</a><br></body></html>");
+            html = html.concat("<br><br><br><a href='/festivals'>List of festivals</a><br></body></html>");
         }
         else
             html = "<html><meta http-equiv=\'Content-Type\' content=\'text/html; charset=UTF-8\' />"
@@ -179,7 +179,7 @@ public class ToHTML {
                     + "<head><h1>Location</h1></head><body>Name: " + l.getName() + "<br>Maximum"
                     + " capacity: " + l.getMaxCapacity() + "<br>Geographical position: " + 
                     l.getGeographicPosition() + "<br>Website: " + l.getWebSite() + "<br>"
-                    + "<a href='/events'>List of events</a><br></body></html>";
+                    + "<br><br><br><a href='/events'>List of events</a><br></body></html>";
         else
             html = "<html><meta http-equiv=\'Content-Type\' content=\'text/html; charset=UTF-8\' />"
                     + "<body><h4>Location not found</h4><br><a href='/events'>List of events</a><br>"
@@ -192,7 +192,7 @@ public class ToHTML {
         if (a != null)
             html = "<html><meta http-equiv=\'Content-Type\' content=\'text/html; charset=UTF-8\' />"
                     + "<head><h1>Artist</h1></head><body>Name: " + a.getName() + "<br>Work description: "
-                    + a.getWorkDescription() + "<br>Website: " + a.getWebSite() + "<br><a href='/events'>"
+                    + a.getWorkDescription() + "<br>Website: " + a.getWebSite() + "<br><br><br><a href='/events'>"
                     + "List of events</a><br></body></html>";
         else
             html = "<html><meta http-equiv=\'Content-Type\' content=\'text/html; charset=UTF-8\' />"
@@ -217,7 +217,7 @@ public class ToHTML {
                         quitarEspacios(aName) + "'>" + aName + "</a><br>");
                 j++;
             }
-            html = html.concat("<a href='/events'>List of events</a><br></body></html>");
+            html = html.concat("<br><br><a href='/events'>List of events</a><br></body></html>");
         }
         else
             html = "<html><meta http-equiv=\'Content-Type\' content=\'text/html; charset=UTF-8\' />"
