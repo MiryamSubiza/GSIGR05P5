@@ -3,135 +3,133 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package GSILabs.net;
 
+import probaproba.*;
+import GSILabs.BModel.*;
 import GSILabs.BSystem.BussinessSystem;
-import GSILabs.BSystem.TicketOffice;
+import GSILabs.BTesting.P01Tester;
 import java.io.BufferedReader;
-import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.ConnectException;
-import java.net.PortUnreachableException;
+import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.SocketException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import jdk.nashorn.internal.runtime.Context;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
 
-/**
- * 
- * @author subiza.79082
- * @author izu.78236
- * @version 10/12/2015
- */
 public class TicketWebServer {
     
-    private BussinessSystem bs;
-    private ServerSocket sc; //Socket servidor
-    private Socket so; //Socket cliente
-    private boolean stopped;
+    private static final int PORT = 8080;
     
-    
-    DataOutputStream salida;
-    String mensajeRecibido;
-    
-    
-    
-    public TicketWebServer (BussinessSystem bs) {
-        
-        this.bs = bs;
-        this.sc = null;
-        this.stopped = false;
-        
-    }
-    
-    /**
-     * 
-     * @param p Puerto sobre el que se lanza el servidor
-     * @param domain Dirección web de la página
-     * @return True la primera invocación sobre un puerto. 
-     *         False reinvocaciones sobre el mismo puerto, sin surtir efecto.
-     */
-    public boolean run (int p, String domain) {
-    
+    public static void main(String[] args) {
         try {
-            //Creación del socket servidor que escuchará en puerto p
-            this.sc = new ServerSocket(p);
-        }
-        catch (PortUnreachableException ex) {
-            System.out.println("Puerto " + p + " inalcanzable. " + ex);
-        }
-        catch (ConnectException ex) {
-            System.out.println("->Error en la escucha sobre el puerto " + p);
-            System.out.println(ex);
-        }
-        catch (IOException ex) {
-            System.out.println("Error en la escucha sobre el puerto " + p);
-            System.out.println(ex);
-        }
-        System.out.println("Esperando una conexión: ");
-        this.so = new Socket();
-        try {
-            //Listens for a connection to be made to this socket and accepts it
-            so = sc.accept();
-            //Conexión por parte del cliente
-            System.out.println("Un cliente se ha conectado");
-        }
-        catch (SocketException ex) {
-            System.out.println("Error accediendo al socket. " + ex);
-        }
-        catch (IOException ex) {
-            System.out.println("Error estableciendo la conexión con el cliente: " + ex);
-            if (stopped) 
-                System.out.println("Se ha detenido el servidor");
-        }
-        
-        
-        
-        BufferedReader entrada;
-        
-        try {
-            
-            
-            //Canales de entrada y salida de datos
-            entrada = new BufferedReader(new InputStreamReader(so.getInputStream()));
-            salida = new DataOutputStream(so.getOutputStream());
-            System.out.println("Confirmando conexión al cliente....");
-            salida.writeUTF("Conexión exitosa...n envia un mensaje :D");
-            //Recepcion de mensaje
-            //mensajeRecibido = entrada.readLine();
-            //System.out.println("El cliente manda: " + mensajeRecibido);
-            salida.write(("<html>Hola mundo</html>").getBytes()); 
-            //salida.writeUTF("Se recibio tu mensaje.n Terminando conexion...");
-            //salida.writeUTF("Gracias por conectarte, adios!");                       
-            System.out.println("Cerrando conexión...");
-            
-        }
+            ServerSocket server = new ServerSocket(PORT);
+            System.out.println("MiniServer active " + PORT);
+            while (true) {
+                new ThreadSocket(server.accept());
+            }
+        } 
         catch (Exception e) {
-            System.out.println("Error: " + e.getMessage());
-            return false;
+            /*if(isStopped()) {
+                System.out.println("Server Stopped.") ;
+                return;
+            }*/
+            throw new RuntimeException("Error accepting client connection", e);
         }
-        
-        return true;
-        
+    }
+}
+
+class ThreadSocket extends Thread {
+    
+    private Socket clientSocket;
+    private ToHTML toHTML = new ToHTML();
+    private BussinessSystem bs = P01Tester.getBussinessSystem();
+    
+    ThreadSocket(Socket clientSocket) {
+        this.clientSocket = clientSocket;
+        this.start();
     }
     
-    /**
-     * 
-     * @return True si se ha cerrado correctamente la conexión con el cliente.
-     *         False en caso contrario.
-     */
-    public boolean stop () {
-        
+    @Override
+    public void run() {
         try {
-            this.sc.close(); //Closes this socket
-            this.stopped = true;
-        } catch (IOException ex) {
-            System.out.println("Error cerrando el servidor. " + ex);
+            InputStream is = clientSocket.getInputStream();
+            PrintWriter out = new PrintWriter(clientSocket.getOutputStream());
+            BufferedReader in = new BufferedReader(new InputStreamReader(is));
+            String line;
+            line = in.readLine();
+            String request_method = line;
+            // Entre todas las peticiones HTTP que llegan al servidor solo vamos a analizar aquellas que pidan un
+            // archivo HTML, es decir, con formato GET /"dominio" HTTP/1.1 el resto de peticiones las desecharemos
+            // por eso en el if compruebo que comienza y finaliza con dicho formato anterior.
+            // Además a base de ejecutar muchas veces este método y analizar las peticiones que envian los navegadores
+             // hemos comprobado que Chrome envia una petición que no nos aporta nada, esta petición es: GET /favicon.ico HTTP/1.1
+            // es por ello que si contiene la secuencia favicon.ico desechamos también dicha petición porque no nos es útil
+            // analizarla.
+            if ((request_method != null) && (request_method.startsWith("GET /")) && (request_method.endsWith("HTTP/1.1")) && (!request_method.contains("favicon.ico"))){
+                // Le paso la subsecuencia que contiene unicamente el dominio que me pide el cliente
+                // de modo que lo analizo y separo en trozos para poder ver en más profundidad que me
+                // el cliente que le devuelva
+                System.out.println(request_method.substring(5, request_method.length() - 9));
+                Map <String,String> parms = queryToMap(request_method.substring(5, request_method.length() - 9));
+                System.out.println("parms es " + parms);
+                if ((parms.size() == 1)) {
+                    if (parms.containsKey("") || parms.containsKey("events"))
+                        out.println(toHTML.listOfEvents());
+                    else if (parms.containsKey("concerts"))
+                        out.println(toHTML.listOfConcerts(bs.getConcerts()));
+                    else if (parms.containsKey("exhibitions"))
+                        out.println(toHTML.listOfExhibitions(bs.getExhibitions()));
+                    else if (parms.containsKey("festivals"))
+                        out.println(toHTML.listOfFestivals(bs.getFestivals()));
+                    else if (parms.containsKey("concertName"))
+                        out.println(toHTML.concertToHTML((Concert)bs.getEvent(ponerEspacios(parms.get("concertName")))));
+                    else if (parms.containsKey("exhibitionName"))
+                        out.println(toHTML.exhibitionToHTML((Exhibition)bs.getEvent(ponerEspacios(parms.get("exhibitionName")))));
+                    else if (parms.containsKey("festivalName"))
+                        out.println(toHTML.festivalToHTML((Festival)bs.getEvent(ponerEspacios(parms.get("festivalName")))));
+                    else if (parms.containsKey("locationName"))
+                        out.println(toHTML.locationToHTML((Location)bs.getLocation(ponerEspacios(parms.get("locationName")))));
+                    else if (parms.containsKey("artistName"))
+                        out.println(toHTML.artistToHTML((Artist)bs.getArtists().get(ponerEspacios(parms.get("artistName")))));
+                    else if (parms.containsKey("collectiveName"))
+                        out.println(toHTML.collectiveToHTML((Collective)bs.getCollectives().get(ponerEspacios(parms.get("collectiveName")))));
+                    else
+                        out.println("<html><body><h4>Website not found</h4></body></html>");
+                }
+            }            
+            System.out.println("1.HTTP-HEADER: " + line);
+            line = "";
+            out.close();
+            clientSocket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        return stopped;
-    }    
+    }
+    
+    public static Map<String, String> queryToMap (String query) {
+        Map<String, String> result = new HashMap<String, String>();
+        String[] queries;
+        if (query.contains("?")) {
+            queries = query.split("\\?");
+            query = queries[1];
+        }
+        for (String param : query.split("&")) {
+            String pair[] = param.split("=");
+            if (pair.length>1)
+                result.put(pair[0], pair[1]);
+            else
+                result.put(pair[0], "");
+        }
+        return result;
+    }
+    
+    //Sustituir los guiones bajos que habíamos puesto en los enlaces por espacios de nuevo
+    public String ponerEspacios (String enlace) {
+        return enlace.replaceAll("_", " ");
+    }
 }
