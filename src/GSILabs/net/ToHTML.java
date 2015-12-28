@@ -5,7 +5,6 @@
  */
 package GSILabs.net;
 
-import probaproba.*;
 import GSILabs.BModel.Artist;
 import GSILabs.BModel.Collective;
 import GSILabs.BModel.Concert;
