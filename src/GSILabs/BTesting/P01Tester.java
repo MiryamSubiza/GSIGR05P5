@@ -52,12 +52,12 @@ public class P01Tester {
         bussinessSystem = new PublicBussinessSystem();
         
         //Artists
-        artists[0] = new Artist("Andrés Suárez", "Cantautor gallego", "www.andressuarez.es");
+        artists[0] = new Artist("Andres Suarez", "Cantautor gallego", "www.andressuarez.es");
         artists[1] = new Artist("Funambulista", "Cantautor murciano", "www.funambulista.es");
-        artists[2] = new Artist("Rozalén", "Cantautora albaceteña");
+        artists[2] = new Artist("Rozalen", "Cantautora albaceteña");
         artists[3] = new Artist("Nach", "Rapero alicantino", "www.nach.es");
         artists[4] = new Artist("Kase-O", "Javier Ibarra, MC zaragozano");
-        artists[5] = new Artist("Lírico", "David Gilaberte, MC zaragozano");
+        artists[5] = new Artist("Lirico", "David Gilaberte, MC zaragozano");
         artists[6] = new Artist("Sho-Hai", "Sergio Rodríguez, MC zaragozano");
         artists[7] = new Artist("R de Rumba", "Rubén Cuevas, DJ zaragozano");
         artists[8] = new Artist("Alex Papito", "Master BOSS del Karaoke");
@@ -84,7 +84,7 @@ public class P01Tester {
         }
         
         //Locations
-        locations[0] = new Location("Interpeñas", 25000, "Zaragoza", "www.interpeñas.es");
+        locations[0] = new Location("Interpenas", 25000, "Zaragoza", "www.interpeñas.es");
         locations[1] = new Location("Palacio de deportes", 15500, "Madrid");
         locations[2] = new Location("BEC", 18000, "Bilbao", "bilbaoexhibitioncentre.com");
         locations[3] = new Location("Palau Olimpic", 12500, "Barcelona");
@@ -144,15 +144,15 @@ public class P01Tester {
         collectives[3].addArtistToCollective(artists[4]);
         collectives[3].addArtistToCollective(artists[6]);
         bussinessSystem.addCollective(collectives[3]);
-        exhibitions[0] = new Exhibition("Exposición uno", "Exposición de RAP", "Eterno miusik",
+        exhibitions[0] = new Exhibition("Exposicion uno", "Exposición de RAP", "Eterno miusik",
             new FechaCompleta("15/05/2016", "15:30"), new FechaCompleta("20/05/2016", "20:30"),
             new FechaCompleta("15/05/2016", "15:30"), new FechaCompleta("20/05/2016", "20:30"),
             collectives[3], "www.eternomiusik.org", locations[0]);
-        exhibitions[1] = new Exhibition("Exposición dos", "Exposición de Nach", "Universal music",
+        exhibitions[1] = new Exhibition("Exposicion dos", "Exposición de Nach", "Universal music",
             new FechaCompleta("21/08/2016", "17:30"), new FechaCompleta("28/08/2016", "20:00"),
             new FechaCompleta("21/08/2016", "17:30"), new FechaCompleta("28/08/2016", "20:00"),
             artists[3], "www.universalmusic.es", locations[5]);
-        exhibitions[2] = new Exhibition("Exposición tres", "Exposición de Kase-O", "Rap solo",
+        exhibitions[2] = new Exhibition("Exposicion tres", "Exposición de Kase-O", "Rap solo",
             new FechaCompleta("26/09/2016", "16:45"), new FechaCompleta("26/09/2016", "21:00"),
             new FechaCompleta("26/09/2016", "16:45"), new FechaCompleta("26/09/2016", "21:00"),
             artists[4], "www.rapsolozgz.com", locations[2]);
