@@ -20,16 +20,26 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 
-public class TicketWebServer {
+public class TicketWebServer extends Thread{
     
     private static final int PORT = 8080;
+    private final Socket clientSocket;
+    private final ToHTML toHTML = new ToHTML();
+    private static BussinessSystem bs;
+    
+    public TicketWebServer(Socket clientSocket, BussinessSystem bSystem){       
+        this.clientSocket = clientSocket;
+        this.bs = bSystem;
+        this.start();
+    }
     
     public static void main(String[] args) {
         try {
             ServerSocket server = new ServerSocket(PORT);
+            BussinessSystem bSystem = P01Tester.getBussinessSystem();
             System.out.println("MiniServer active " + PORT);
-            while (true) {
-                new ThreadSocket(server.accept());
+            while (true) {               
+                new TicketWebServer(server.accept(), bSystem);
             }
         } 
         catch (Exception e) {
@@ -39,18 +49,7 @@ public class TicketWebServer {
             }*/
             throw new RuntimeException("Error accepting client connection", e);
         }
-    }
-}
-
-class ThreadSocket extends Thread {
-    
-    private Socket clientSocket;
-    private ToHTML toHTML = new ToHTML();
-    private BussinessSystem bs = P01Tester.getBussinessSystem();
-    
-    ThreadSocket(Socket clientSocket) {
-        this.clientSocket = clientSocket;
-        this.start();
+        
     }
     
     @Override
