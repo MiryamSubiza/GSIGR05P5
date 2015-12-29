@@ -126,10 +126,10 @@ public class ToHTML {
                     + ((FechaCompleta)e.getClosingTimeExhibition()).horaToString() + "h<br>Closing date: "
                     + ((FechaCompleta)e.getEndingDate()).fechaToString() + "<br>";
             if (e.getPerformer() instanceof Artist)
-                html = html.concat("<a href='/artist?artistName=" + quitarEspacios(e.getPerformer().getName())
+                html = html.concat("Artist: <a href='/artist?artistName=" + quitarEspacios(e.getPerformer().getName())
                         + "'>" + e.getPerformer().getName() + "</a><br>Web links: ");
             else
-                html = html.concat("<a href='/collective?collectiveName=" + quitarEspacios(e.getPerformer().getName())
+                html = html.concat("Collective: <a href='/collective?collectiveName=" + quitarEspacios(e.getPerformer().getName())
                         + "'>" + e.getPerformer().getName() + "</a><br>Web links: ");
             Iterator i = e.getWebLinks().iterator();
             while (i.hasNext()) {
