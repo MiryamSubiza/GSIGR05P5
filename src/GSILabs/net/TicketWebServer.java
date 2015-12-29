@@ -20,22 +20,42 @@ import java.util.Map;
 
 public class TicketWebServer extends Thread{
     
-    private static final int PORT = 8080;
     private final Socket clientSocket;
     private final ToHTML toHTML = new ToHTML();
     private final BussinessSystem bs;
+    //private static int port;
+    //private static String domain;
     
     public TicketWebServer(Socket clientSocket, BussinessSystem bSystem){       
         this.clientSocket = clientSocket;
         this.bs = bSystem;
     }
     
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
+        System.out.println("-----Servidor Web Java BussinessSystem-----");
+        System.out.println("Introduzca el puerto donde desea lanzar el servidor: ");
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int puerto = Integer.parseInt(br.readLine());
+        System.out.println("Introduzca el dominio donde desea lanzar el servidor: ");
+        String dominio = br.readLine();
+        run(puerto,dominio);
+        
+    }
+    
+    /**
+     * Con este metodo lanzamos el servidor en el puerto y dominio indicado
+     * a su vez se queda a la espera de nuevos clientes para servirles
+     * @param serverPort puerto donde se lanza el servidor
+     * @param serverDomain dominio donde se lanza el servidor
+     * @return
+     */
+    public static boolean run(int serverPort, String serverDomain) {
+              
         try {
-            ServerSocket server = new ServerSocket(PORT);
+            ServerSocket server = new ServerSocket(serverPort);
             BussinessSystem bSystem = P01Tester.getBussinessSystem();
-            System.out.println("MiniServer active " + PORT);
-            while (true) {               
+            System.out.println("MiniServer active " + serverPort);
+            while (true) {
                 TicketWebServer ticketWebServer = new TicketWebServer(server.accept(), bSystem);
                 ticketWebServer.start();
             }
@@ -46,6 +66,9 @@ public class TicketWebServer extends Thread{
                 return;
             }*/
             throw new RuntimeException("Error accepting client connection", e);
+        }
+        finally{
+            return true;
         }
         
     }
